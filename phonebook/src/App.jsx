@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
 
 
 const App = () => {
@@ -47,9 +48,7 @@ const App = () => {
       <h2>Add a new</h2>
         <PersonForm addName={addName} newName={newName} handleNewName={handleNewName}  newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h2>Numbers</h2>
-      <ul>
-        {searchFiltering.map(person => <li key={person.id}>{person.name} {person.number}</li>)}
-      </ul>
+      <Persons searchFiltering={searchFiltering} />
     </div>
   )
 }
