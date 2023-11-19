@@ -45,9 +45,9 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
         <Filter handleSearch={handleSearch} searchAll={searchAll}/>
-      <h2>Add a new</h2>
+      <h3>Add a new</h3>
         <PersonForm addName={addName} newName={newName} handleNewName={handleNewName}  newNumber={newNumber} handleNewNumber={handleNewNumber} />
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <Persons searchFiltering={searchFiltering} />
     </div>
   )
