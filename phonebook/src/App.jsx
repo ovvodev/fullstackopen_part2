@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-
 import personService from './services/persons';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const App = () => {
@@ -40,10 +40,26 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: uuidv4(),
     }
+    
     if(persons.filter((person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)).length > 0 ){
-      alert(`${personObject.name} is already in the phonebook`)
+      if (window.confirm(`${personObject.name} is already in the phonebook.Do you want to replace the old number with a new one`)){
+        const currentPerson = persons.find(person => JSON.stringify(person.name) === JSON.stringify(personObject.name))
+        personService
+          .update(currentPerson.id , personObject)
+          .then((updatedPerson) => {
+            setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(error => {
+            console.error('Error updating person:', error);
+          });
+      }else{
+        setNewName("");
+        setNewNumber("");
+      }
     }else{
       personService
         .create(personObject)
@@ -52,6 +68,9 @@ const App = () => {
           setNewName("")
           setNewNumber("")
         })
+        .catch(error => {
+          console.error('Error updating person:', error);
+        });
     }
     
   }
