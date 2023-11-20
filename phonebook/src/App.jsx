@@ -4,6 +4,7 @@ import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/persons';
 import { v4 as uuidv4 } from 'uuid';
+import Notification from './components/Notification';
 
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber , setNewNumber ] = useState("");
   const [searchAll, setSearch] = useState("");
+  const [successMessage , setMessage] = useState(null);
 
 
   useEffect(() => {
@@ -42,6 +44,8 @@ const App = () => {
       number: newNumber,
       id: uuidv4(),
     }
+
+    
     
     if(persons.filter((person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)).length > 0 ){
       if (window.confirm(`${personObject.name} is already in the phonebook.Do you want to replace the old number with a new one`)){
@@ -52,8 +56,13 @@ const App = () => {
             setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
             setNewName("");
             setNewNumber("");
+            setMessage(`${personObject.name} has been updated`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 2000)
           })
           .catch(error => {
+            
             console.error('Error updating person:', error);
           });
       }else{
@@ -67,6 +76,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName("")
           setNewNumber("")
+          setMessage(`${personObject.name} has been added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 2000)
         })
         .catch(error => {
           console.error('Error updating person:', error);
@@ -98,6 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
         <Filter handleSearch={handleSearch} searchAll={searchAll}/>
       <h3>Add a new</h3>
         <PersonForm addName={addName} newName={newName} handleNewName={handleNewName}  newNumber={newNumber} handleNewNumber={handleNewNumber} />
