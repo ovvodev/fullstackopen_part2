@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import axios from 'axios'
+
+import personService from './services/persons';
 
 
 const App = () => {
@@ -12,37 +13,14 @@ const App = () => {
   const [searchAll, setSearch] = useState("");
 
 
-  const hook = () => {
-    console.log("effect");
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        console.log("promise fulfilled")
-        setPersons(response.data)
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
-  
-  };
+  }, [])
 
-
-  useEffect(hook,[]); 
-
-
-  const addName = (event) => {
-    event.preventDefault();
-    const personObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length,
-    }
-    if(persons.filter((person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)).length > 0 ){
-      alert(`${personObject.name} is already in the phonebook`)
-    }else{
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewNumber("");
-    }
-    
-  }
   const handleNewName = (event) => {
     setNewName(event.target.value);
     
@@ -56,7 +34,47 @@ const App = () => {
 
   }
 
+  
+  const addName = (event) => {
+    event.preventDefault();
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    }
+    if(persons.filter((person) => JSON.stringify(person.name) === JSON.stringify(personObject.name)).length > 0 ){
+      alert(`${personObject.name} is already in the phonebook`)
+    }else{
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName("")
+          setNewNumber("")
+        })
+    }
+    
+  }
+
   const searchFiltering = searchAll === "" ? persons : persons.filter(person => person.name.toLowerCase().includes(searchAll.toLowerCase()));
+
+  const deletePerson = (id) => {
+    const person = persons.find(n => n.id === id);
+    console.log(person)
+    if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
+      personService
+      .findForDelete(person.id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      })
+      .catch(error => {
+        window.open('Error deleting person:', error);
+      });
+    }
+   
+  }
+
+  
 
   return (
     <div>
@@ -65,7 +83,7 @@ const App = () => {
       <h3>Add a new</h3>
         <PersonForm addName={addName} newName={newName} handleNewName={handleNewName}  newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h3>Numbers</h3>
-      <Persons searchFiltering={searchFiltering} />
+      <Persons searchFiltering={searchFiltering} deletePerson = {deletePerson}/>
     </div>
   )
 }
