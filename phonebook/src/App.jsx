@@ -5,6 +5,7 @@ import Persons from './components/Persons';
 import personService from './services/persons';
 import { v4 as uuidv4 } from 'uuid';
 import Notification from './components/Notification';
+import Errornotification from './components/Errornotification';
 
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [newNumber , setNewNumber ] = useState("");
   const [searchAll, setSearch] = useState("");
   const [successMessage , setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
 
   useEffect(() => {
@@ -62,8 +64,11 @@ const App = () => {
             }, 2000)
           })
           .catch(error => {
+            setErrorMessage(`${personObject.name} Error updating person`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2000)
             
-            console.error('Error updating person:', error);
           });
       }else{
         setNewName("");
@@ -82,7 +87,10 @@ const App = () => {
           }, 2000)
         })
         .catch(error => {
-          console.error('Error updating person:', error);
+          setErrorMessage(`${personObject.name} Error adding person`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2000)
         });
     }
     
@@ -112,6 +120,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={successMessage} />
+      <Errornotification message={errorMessage}/>
         <Filter handleSearch={handleSearch} searchAll={searchAll}/>
       <h3>Add a new</h3>
         <PersonForm addName={addName} newName={newName} handleNewName={handleNewName}  newNumber={newNumber} handleNewNumber={handleNewNumber} />
