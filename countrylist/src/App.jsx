@@ -52,13 +52,24 @@ const App = () => {
     }
   };
 
-  
+  const handleShowMore = (name) => {
+    console.log(name);
+    countryService.findCountry(name)
+      .then((detailedCountry) => {
+        console.log(detailedCountry);
+        setCountries([detailedCountry]);
+      })
+      .catch((error) => {
+        console.error('Error fetching detailed country:', error);
+      });
+  };
 
+  
   return (
     <div>
       < Search countryName = {searchedCountry} handleCountry={handleCountry} />
       
-      <Countries countries={countries} message={message} />
+      <Countries countries={countries} message={message} showMore={handleShowMore}/>
       {countries.length === 1 && (
         <Country country={countries[0]} />
       )}

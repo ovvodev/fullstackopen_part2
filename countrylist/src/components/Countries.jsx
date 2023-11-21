@@ -1,12 +1,12 @@
 
 
 
-const Countries = ({ countries, message }) => {
+const Countries = ({ countries, message , showMore }) => {
   return (
     <div>
       <p>{message}</p>
       {countries.map((country) => (
-        <p key={country.cca3}>{country.name.common}</p>
+        <li key={country.cca3}>{country.name.common} <button onClick={() => showMore(country.name.common)}>Show</button> </li>
       ))}
     </div>
   );
