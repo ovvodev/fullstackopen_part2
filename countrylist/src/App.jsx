@@ -59,7 +59,9 @@ const App = () => {
       < Search countryName = {searchedCountry} handleCountry={handleCountry} />
       
       <Countries countries={countries} message={message} />
-      
+      {countries.length === 1 && (
+        <Country country={countries[0]} />
+      )}
 
     </div>
         
