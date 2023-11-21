@@ -2,12 +2,14 @@ import { useState , useEffect } from 'react'
 import countryService from "./services/countries"
 import Search from './components/Search'
 import Countries from './components/Countries'
+import Country from "./components/Country"
 
 
 const App = () => {
   const [countries , setCountries] = useState([]);
   const [message, setMessage] = useState(null)
   const [searchedCountry , setSearchedCountry] = useState("")
+  
 
 
  
@@ -33,15 +35,15 @@ const App = () => {
         setMessage(null)
       }else {
         const filteredCountries = allCountries.filter(country =>
-        country.name.common.toLowerCase().includes(value.toLowerCase())
-      );
-      if(filteredCountries.length > 10){
-        setMessage("Too many matches, specify another filter")
-        setCountries([])
-      } else {
-        setCountries(filteredCountries)
-        setMessage(null)
-      }
+           country.name.common.toLowerCase().includes(value.toLowerCase())
+        );
+        if(filteredCountries.length > 10){
+          setMessage("Too many matches, specify another filter")
+          setCountries([])
+        } else {
+          setCountries(filteredCountries)
+          setMessage(null)
+        }
       }
       
       
@@ -57,6 +59,7 @@ const App = () => {
       < Search countryName = {searchedCountry} handleCountry={handleCountry} />
       
       <Countries countries={countries} message={message} />
+      
 
     </div>
         
