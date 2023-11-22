@@ -3,12 +3,14 @@ import countryService from "./services/countries"
 import Search from './components/Search'
 import Countries from './components/Countries'
 import Country from "./components/Country"
+import Weather from './components/Weather'
 
 
 const App = () => {
   const [countries , setCountries] = useState([]);
   const [message, setMessage] = useState(null)
   const [searchedCountry , setSearchedCountry] = useState("")
+  const [weather , setWeather] = useState([])
   
 
 
@@ -52,6 +54,7 @@ const App = () => {
     }
   };
 
+  
   const handleShowMore = (name) => {
     console.log(name);
     countryService.findCountry(name)
@@ -64,6 +67,17 @@ const App = () => {
       });
   };
 
+  const api_key = import.meta.env.VITE_SOME_KEY
+  const handleWeather = () => {
+      const lat = detailedCountry.latlng[0];
+      const lon = detailedCountry.latlng[1];
+      console.log(lat,lon, api_key)
+      countryService.getWeather(lat, lon, api_key)
+        .then((weather) => {
+          setWeather([weather]);
+          console.log(weather)
+        })
+  }
   
   return (
     <div>
@@ -71,9 +85,10 @@ const App = () => {
       
       <Countries countries={countries} message={message} showMore={handleShowMore}/>
       {countries.length === 1 && (
-        <Country country={countries[0]} />
+        <Country country={countries[0]}/>
+        
       )}
-
+      <Weather weather={weather} loadWeather={handleWeather}/>
     </div>
         
   )

@@ -1,5 +1,7 @@
 
 const Country = ({ country }) => {
+  
+
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -14,6 +16,8 @@ const Country = ({ country }) => {
       {country.flags && (
         <img src={Object.values(country.flags)[0]} alt={Object.values(country.flags)[2]} width={200}/>
       )}
+      <div>
+      </div>
     </div>
   );
 };
