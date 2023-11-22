@@ -61,6 +61,7 @@ const App = () => {
       .then((detailedCountry) => {
         console.log(detailedCountry);
         setCountries([detailedCountry]);
+        handleWeather(detailedCountry);
       })
       .catch((error) => {
         console.error('Error fetching detailed country:', error);
@@ -68,7 +69,7 @@ const App = () => {
   };
 
   const api_key = import.meta.env.VITE_SOME_KEY
-  const handleWeather = () => {
+  const handleWeather = (detailedCountry) => {
       const lat = detailedCountry.latlng[0];
       const lon = detailedCountry.latlng[1];
       console.log(lat,lon, api_key)
