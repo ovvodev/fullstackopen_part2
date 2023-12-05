@@ -87,7 +87,7 @@ const App = () => {
           }, 2000)
         })
         .catch(error => {
-          setErrorMessage(`${personObject.name} Error adding person`)
+          setErrorMessage(`${error.response.data.error}`)
             setTimeout(() => {
               setErrorMessage(null)
             }, 2000)
